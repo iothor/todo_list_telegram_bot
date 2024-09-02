@@ -1,0 +1,10 @@
+aiogram
+asyncpg
+sqlalchemy
+alembic
+
+pydantic
+pydantic-settings
+logging
+ruff
+pytest
