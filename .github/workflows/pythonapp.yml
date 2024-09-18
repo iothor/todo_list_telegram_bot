@@ -33,6 +33,15 @@ jobs:
           while ! docker exec ${{ job.services.db.id }} pg_isready -U test_user; do
             sleep 5
           done
+      
+      - name: Create .env file
+        run: |
+          echo "DB_HOST=localhost" >> .env
+          echo "DB_PORT=5432" >> .env
+          echo "DB_USER=test_user" >> .env
+          echo "DB_PASS=test_password" >> .env
+          echo "DB_NAME=test_db" >> .env
+          echo "DB_NAME_TEST=test_db" >> .env
 
       - name: Set up Python environment
         uses: actions/setup-python@v4
@@ -50,6 +59,4 @@ jobs:
            
       - name: Tests
         run: |
-          touch .env
-          echo "DB_HOST=localhost\nDB_PORT=5432\nDB_USER=test_user\nDB_PASS=test_password\nDB_NAME=test_db\nDB_NAME_TEST=test_db" >> .env
           make test
