@@ -23,10 +23,6 @@ jobs:
           POSTGRES_DB: test_db
         options: > 
           --network host
-          --health-cmd="pg_isready -U test_user" 
-          --health-interval=10s 
-          --health-timeout=5s 
-          --health-retries=5
 
     steps:
       - name: Checkout repository
