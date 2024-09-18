@@ -46,7 +46,7 @@ async def btn_done(callback: CallbackQuery, callback_data:TaskCallbackData):
     await callback.answer()
 
 @router.callback_query(TaskCallbackData.filter(F.action=="delete"))
-async def btn_done(callback: CallbackQuery, callback_data:TaskCallbackData):
+async def btn_delete(callback: CallbackQuery, callback_data:TaskCallbackData):
     async with session_factory() as session:
         await delete_task(session, callback_data.id)
     await callback.message.delete()

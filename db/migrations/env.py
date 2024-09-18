@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from db import database, models
+from db import database, models # noqa
 
 config = context.config
 
