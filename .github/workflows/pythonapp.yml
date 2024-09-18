@@ -1,24 +1,62 @@
-name: Python application test with Github Actions
+name: Run Tests with DB in Docker
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
 
+    services:
+      db:
+        image: postgres:15
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: test_db
+        options: > 
+          --network host
+          --health-cmd="pg_isready -U test_user" 
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=5
+
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.11
-    - name: Install dependencies
-      run: |
-        make install
-    - name: Lint with pylint
-      run: |
-        make lint
-    - name: Format code
-      run: |
-        make format
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Wait for DB to be ready
+        run: |
+          echo "Waiting for DB to be ready..."
+          while ! docker exec ${{ job.services.db.id }} pg_isready -U test_user; do
+            sleep 5
+          done
+
+      - name: Set up Python environment
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: make install
+
+      - name: Lint
+        run: make lint
+      
+      - name: Format
+        run: make format
+
+      - name: Create .env file for testing
+        run: |
+          touch .env
+          "DB_HOST=localhost\nDB_PORT=5432\nDB_USER=test_user\nDB_PASS=test_password\nDB_NAME=test_db\nDB_NAME_TEST=test_db" >> .env 
+
+      - name: Tests
+        run: make test

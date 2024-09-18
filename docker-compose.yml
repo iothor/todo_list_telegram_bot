@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: todo_list_telegram
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  bot:
+    build: .
+    depends_on:
+      - db
+    volumes:
+      - .:/todo_tel_bot
+    networks:
+      - app_network
+
+volumes:
+  postgres_data:
+
+networks:
+  app_network:

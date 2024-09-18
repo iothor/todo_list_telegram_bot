@@ -2,11 +2,8 @@ install:
 	python -m pip install --upgrade pip &&\
 		python -m pip install -r requirements.txt
 
-migrations:
-	python -m alembic revision --autogenerate -m "$(slug)"
-
-migrate:
-	python -m alembic upgrade head
+setup_db:
+	alembic upgrade head
 
 lint:
 	python -m ruff check
@@ -17,8 +14,4 @@ format:
 test:
 	python -m pytest -v tests/
 
-init_database: 
-	make migrations slug="inti_database" &&\
-		make migrate 
-
-all: install lint test format
+all: install setup_db lint test format

@@ -1,11 +1,12 @@
 aiogram
 asyncpg
+psycopg
+psycopg-binary
 sqlalchemy
 alembic
 
 pydantic
 pydantic-settings
-logging
 ruff
 pytest
 pytest-asyncio
