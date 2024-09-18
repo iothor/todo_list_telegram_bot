@@ -21,12 +21,9 @@ jobs:
           POSTGRES_USER: test_user
           POSTGRES_PASSWORD: test_password
           POSTGRES_DB: test_db
-        options: > 
-          --network host
-          --health-cmd="pg_isready -U test_user" 
-          --health-interval=10s 
-          --health-timeout=5s 
-          --health-retries=5
+        options:
+          "--network host"
+
 
     steps:
       - name: Checkout repository
@@ -35,7 +32,7 @@ jobs:
       - name: Wait for DB to be ready
         run: |
           echo "Waiting for DB to be ready..."
-          while ! docker exec ${{ job.services.db.id }} pg_isready -U test_user; do
+          while ! docker exec ${{ job.services.db.id }} pg_isready -U test_user --network host; do
             sleep 5
           done
 
