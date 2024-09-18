@@ -51,7 +51,7 @@ jobs:
       - name: Create .env file for testing
         run: |
           touch .env
-          "DB_HOST=localhost\nDB_PORT=5432\nDB_USER=test_user\nDB_PASS=test_password\nDB_NAME=test_db\nDB_NAME_TEST=test_db" >> .env 
+          echo "DB_HOST=localhost\nDB_PORT=5432\nDB_USER=test_user\nDB_PASS=test_password\nDB_NAME=test_db\nDB_NAME_TEST=test_db" >> .env 
 
       - name: Tests
         run: make test
